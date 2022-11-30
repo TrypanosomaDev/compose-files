@@ -1,0 +1,57 @@
+version: '3.3'
+
+services:
+  
+  db:
+    image: postgres:14.6-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./postgres-data-myapp:/var/lib/postgresql/data
+  
+  rabbitmq:
+      restart: always
+      image: 'bitnami/rabbitmq:3.8'
+      ports:
+        - '4369:4369'
+        - '5672:5672'
+        - '25672:25672'
+        - '15672:15672'
+
+  auth-service:
+    image: postgres:14.6-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRE_IP: db
+      POSTGRE_PORT: 5432
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USERNAME: user
+      RABBIT_PASSWORD: bitnami
+      SERVER_PORT: 8080
+    
+
+  book-service:
+    image: postgres:14.6-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRE_IP: db
+      POSTGRE_PORT: 5432
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USERNAME: user
+      RABBIT_PASSWORD: bitnami
+      SERVER_PORT: 8081    
+
