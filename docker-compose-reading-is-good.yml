@@ -23,13 +23,13 @@ services:
         - '15672:15672'
 
   auth-service:
-    image: postgres:14.6-alpine
+    image: trypanosomadev/auth-service:local
     restart: always
     ports:
-      - 5432:5432
+      - 8080:8080
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRE_USER: postgres
+      POSTGRE_PASSWORD: password
       POSTGRE_IP: db
       POSTGRE_PORT: 5432
       RABBIT_HOST: rabbitmq
@@ -37,21 +37,23 @@ services:
       RABBIT_USERNAME: user
       RABBIT_PASSWORD: bitnami
       SERVER_PORT: 8080
+      DB_NAME: registration
     
 
-  book-service:
-    image: postgres:14.6-alpine
+  book-service: 
+    image: trypanosomadev/book-service:local
     restart: always
     ports:
-      - 5432:5432
+      - 8081:8081
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRE_USER: postgres
+      POSTGRE_PASSWORD: password
       POSTGRE_IP: db
       POSTGRE_PORT: 5432
       RABBIT_HOST: rabbitmq
       RABBIT_PORT: 5672
       RABBIT_USERNAME: user
       RABBIT_PASSWORD: bitnami
-      SERVER_PORT: 8081    
-
+      SERVER_PORT: 8081
+      DB_NAME: book_service
+      AUTH_SERVICE_URL: http://auth-service:8080/api/v1/authentication?role=%s
